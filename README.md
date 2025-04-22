@@ -1,2 +1,2 @@
 # BallMover
-Playing around with Basic animation and input in Java
+Playing around with basic animation and input in Java
