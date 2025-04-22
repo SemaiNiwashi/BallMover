@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BallMoverAdvanced extends Application {
 
@@ -14,7 +16,8 @@ public class BallMoverAdvanced extends Application {
     private static int HEIGHT = 600;
     private static final int CELL_SIZE = 50;
     private static final int BALL_RADIUS = 20;
-
+    private final Set<KeyCode> pressedKeys = new HashSet<>();
+    
     private Group maze;
     private Circle ball;
     private int[][] mazeGrid;
@@ -55,31 +58,31 @@ public class BallMoverAdvanced extends Application {
         // Create the scene
         Scene scene = new Scene(new Group(maze, ball), WIDTH, HEIGHT, Color.WHITE);
 
-        // Handle key events to move the ball
-        scene.setOnKeyPressed(event -> {
-            double dx = 0, dy = 0;
+        // Log key events to track pressed keys
+        scene.setOnKeyPressed(event -> pressedKeys.add(event.getCode()));
+        scene.setOnKeyReleased(event -> pressedKeys.remove(event.getCode()));
+        /*scene.setOnKeyPressed(event -> {
             if (event.getCode()== KeyCode.LEFT) {
-                dx = -5;
+                System.out.println("left key pressed!");
             }
-            else if (event.getCode()== KeyCode.RIGHT) {
-                dx = 5;
-            }
-            else if (event.getCode()== KeyCode.UP) {
-                dy = -5;
-            }
-            else if (event.getCode()== KeyCode.DOWN) {
-                dy = 5;
-            }
-            moveBall(dx, dy);
-        });
+        });*/
 
-        // Update the ball position every frame
+        // Main loop
         AnimationTimer animation = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // Check for collisions with walls
-                if (isWall(ball.getCenterX(), ball.getCenterY())) {
-                    //moveBall(-ball.getTranslateX(), -ball.getTranslateY());
+              // Handle key events to move the ball
+                if (pressedKeys.contains(KeyCode.LEFT)) {
+                    moveBall(-5,0);
+                }
+                else if (pressedKeys.contains(KeyCode.RIGHT)) {
+                    moveBall(5, 0);
+                }
+                else if (pressedKeys.contains(KeyCode.UP)) {
+                    moveBall(0, -5);
+                }
+                else if (pressedKeys.contains(KeyCode.DOWN)) {
+                    moveBall(0, 5);
                 }
             }
         };
