@@ -92,13 +92,22 @@ public class BallMoverAdvanced extends Application {
     }
 
     private void moveBall(double dx, double dy) {
-        double x = ball.getCenterX() + dx;
-        double y = ball.getCenterY() + dy;
+        ball.setCenterX(ball.getCenterX() + dx);
+        ball.setCenterY(ball.getCenterY() + dy);
+        double x = ball.getCenterX();
+        double y = ball.getCenterY();
 
         if (x - BALL_RADIUS >= 0 && x + BALL_RADIUS <= WIDTH
-           && y - BALL_RADIUS >= 0 && y + BALL_RADIUS <= HEIGHT) {
+            && y - BALL_RADIUS >= 0 && y + BALL_RADIUS <= HEIGHT
+            && !isCollision())
+        {
             ball.setCenterX(x);
             ball.setCenterY(y);
+        }
+        else
+        {
+            ball.setCenterX(ball.getCenterX() - dx);
+            ball.setCenterY(ball.getCenterY() - dy);
         }
     }
 
@@ -108,6 +117,13 @@ public class BallMoverAdvanced extends Application {
         return mazeGrid[row][col] == 1;
     }
 
+    private boolean isCollision(){
+        return isWall(ball.getCenterX() + BALL_RADIUS, ball.getCenterY())
+            || isWall(ball.getCenterX() - BALL_RADIUS, ball.getCenterY())
+            || isWall(ball.getCenterX(), ball.getCenterY() + BALL_RADIUS)
+            || isWall(ball.getCenterX(), ball.getCenterY() - BALL_RADIUS);
+    }
+    
     public static void main(String[] args) {
         launch(args);
     }
